@@ -4,7 +4,7 @@
       <select v-model="model.blok">
         <option value="">Bitte Block wählen ...</option>
         <option v-for="component in components" :value="component" v-bind:key="component._uid">
-          {{ component.name }}
+          {{ component.name }} &bull; {{ component.profession }}
         </option>
       </select>
     </div>
@@ -19,7 +19,7 @@ export default {
     }
   },
   mixins: [window.Storyblok.plugin],
-  props: ['sbLanguage'],
+  props: ['sbLanguage', 'token'],
   methods: {
     initWith() {
       return {
@@ -28,7 +28,9 @@ export default {
       }
     },
     async fetchComponents() {
-      const res = await fetch(`https://api.storyblok.com/v2/cdn/stories/${this.options.slug}?token=${this.options.token}&language=${this.sbLanguage}`);
+      const res = await fetch(
+        `https://api.storyblok.com/v2/cdn/stories/${this.options.slug}?token=${this.token}&language=${this.sbLanguage}&version=draft`
+      );
       const data = await res.json();
       this.components = data.story ? data.story.content[this.options.wrapper] : [];
     }
